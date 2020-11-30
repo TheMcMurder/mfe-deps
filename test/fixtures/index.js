@@ -1,5 +1,9 @@
-function test() {
-  return 'value';
+import React, { useState } from 'react';
+import { render } from 'react-dom';
+
+function Test() {
+  const state = useState(0);
+  return 'Test';
 }
 
-test();
+render(Test, document.getElementById('root'));
