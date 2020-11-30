@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "stats": "webpack --json stats.json"
   },
   "author": "@filoxo",
   "license": "MIT",
@@ -12,6 +13,7 @@
     "webpack": "^5.5.0"
   },
   "devDependencies": {
-    "jest": "^26.6.3"
+    "jest": "^26.6.3",
+    "webpack-cli": "^4.2.0"
   }
 }
