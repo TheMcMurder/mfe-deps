@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { render } from 'react-dom';
+import Child from './child';
 
 function Test() {
   const state = useState(0);
