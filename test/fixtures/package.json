@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "stats": "webpack --json stats.json -c webpack.config.js"
+    "stats": "webpack -c webpack.config.js"
   },
   "author": "@filoxo",
   "license": "MIT",
@@ -14,5 +14,9 @@
     "react-dom": "^17.0.1",
     "webpack": "^5.6.0",
     "webpack-cli": "^4.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitpoop.com/poopyproject.git"
   }
 }

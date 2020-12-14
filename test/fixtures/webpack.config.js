@@ -1,6 +1,6 @@
 const MfeDepsWebpackPlugin = require('../../index.js');
 const { join } = require('path');
-const { name } = require('./package.json');
+const { name, repository } = require('./package.json');
 
 module.exports = {
   profile: true,
@@ -12,6 +12,9 @@ module.exports = {
   plugins: [
     new MfeDepsWebpackPlugin({
       name: name,
+      meta: {
+        repository: repository.url,
+      },
     }),
   ],
   externals: ['react'],
