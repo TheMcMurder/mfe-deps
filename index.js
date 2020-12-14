@@ -5,7 +5,11 @@
  * By doing this in the bundler, you can get visibilty into both external and bundled dependencies.
  */
 module.exports = class MfeDepsWebpackPlugin {
-  constructor() {
+  constructor(options) {
+    if (!options.name)
+      throw new Error(`${MfeDepsWebpackPlugin.name} requires a 'name' option`);
+
+    this.name = options.name;
     this.dependencies = [];
     this.externals = [];
   }
@@ -41,12 +45,15 @@ module.exports = class MfeDepsWebpackPlugin {
           .map((module) => (!module.externalType ? false : module.request))
           .filter(Boolean);
 
-        const report = this.dependencies.map((dep) => ({
+        const dependencies = this.dependencies.map((dep) => ({
           ...dep,
           external: this.externals.includes(dep.source),
         }));
 
-        console.log('report', report);
+        console.log({
+          name: this.name,
+          dependencies,
+        });
         callback();
       }
     );
