@@ -20,10 +20,14 @@ module.exports = class MfeDepsWebpackPlugin {
             parser.hooks.importSpecifier.tap(
               MfeDepsWebpackPlugin.name,
               (statement, source, exportName, identifierName) => {
-                this.dependencies.push({
-                  source,
-                  exportName,
-                });
+                const isLocalImport = source.startsWith('.');
+                if (!isLocalImport) {
+                  this.dependencies.push({
+                    specifier: source,
+                    import: exportName,
+                    file: parser.state.module.rawRequest,
+                  });
+                }
               }
             );
           });
