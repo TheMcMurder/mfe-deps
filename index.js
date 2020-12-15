@@ -8,7 +8,7 @@ const { resolve } = require('path');
  * By doing this in the bundler, you can get visibilty into both external and bundled dependencies.
  */
 module.exports = class MfeDepsWebpackPlugin {
-  constructor({ name, meta }) {
+  constructor({ name, meta } = {}) {
     if (!name)
       throw new Error(`${MfeDepsWebpackPlugin.name} requires a 'name' option`);
     this.name = name;
