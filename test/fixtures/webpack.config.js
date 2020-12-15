@@ -3,9 +3,8 @@ const { join } = require('path');
 const { name, repository } = require('./package.json');
 
 module.exports = {
-  profile: true,
   mode: 'development',
-  entry: './index.js',
+  entry: join(__dirname, './index.js'),
   output: {
     path: join(__dirname, 'dist'),
   },
