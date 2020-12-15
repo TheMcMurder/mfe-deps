@@ -52,9 +52,6 @@ test('Failed config', () => {
       },
       plugins: [new MfeDepsWebpackPlugin({})],
     });
-    compiler.run((err) => {
-      expect(err).toBeFalsy();
-      done();
-    });
+    compiler.run(done);
   }).toThrow();
 });
