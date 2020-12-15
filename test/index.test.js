@@ -42,16 +42,8 @@ test('Basic usage', (done) => {
   });
 });
 
-test('Failed config', () => {
+test('Throws if required options (name) are missing', () => {
   expect(() => {
-    const compiler = webpack({
-      mode: 'development',
-      entry: FIXTURE('./index.js'),
-      output: {
-        path: FIXTURE('dist'),
-      },
-      plugins: [new MfeDepsWebpackPlugin({})],
-    });
-    compiler.run(done);
+    new MfeDepsWebpackPlugin({});
   }).toThrow();
 });
