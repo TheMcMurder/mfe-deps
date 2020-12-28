@@ -5,8 +5,7 @@
   "main": "index.js",
   "files": [
     "index.js",
-    "visualize.js",
-    "index.html"
+    "visualize.js"
   ],
   "scripts": {
     "test": "jest",
