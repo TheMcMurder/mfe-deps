@@ -1,5 +1,6 @@
-const { promises: fs } = require('fs');
+const { writeFileSync } = require('fs');
 const { resolve } = require('path');
+const createVisualization = require('./visualize');
 
 /**
  * The reason this is implemented as a webpack plugin is because:
@@ -8,19 +9,15 @@ const { resolve } = require('path');
  * By doing this in the bundler, you can get visibilty into both external and bundled dependencies.
  */
 module.exports = class MfeDepsWebpackPlugin {
-  constructor({ name, meta } = {}) {
+  constructor({ name, meta, visualize = false } = {}) {
     if (!name)
       throw new Error(`${MfeDepsWebpackPlugin.name} requires a 'name' option`);
     this.name = name;
     this.meta = meta;
+    this.visualize = visualize;
     this.dependencies = [];
-    this.externals = [];
   }
   static name = 'MfeDepsWebpackPlugin';
-
-  writeReport(reportPath, report) {
-    return fs.writeFile(reportPath, JSON.stringify(report, null, 2));
-  }
 
   apply(compiler) {
     compiler.hooks.normalModuleFactory.tap(
@@ -31,7 +28,7 @@ module.exports = class MfeDepsWebpackPlugin {
           .tap(MfeDepsWebpackPlugin.name, (parser) => {
             parser.hooks.importSpecifier.tap(
               MfeDepsWebpackPlugin.name,
-              (statement, source, exportName, identifierName) => {
+              (_statement, source, exportName, _identifierName) => {
                 const isLocalImport = source.startsWith('.');
                 if (!isLocalImport) {
                   this.dependencies.push({
@@ -48,15 +45,15 @@ module.exports = class MfeDepsWebpackPlugin {
 
     compiler.hooks.done.tapAsync(
       MfeDepsWebpackPlugin.name,
-      (stats, callback) => {
-        this.externals = Array.from(stats.compilation.modules)
+      (stats, finished) => {
+        const externals = Array.from(stats.compilation.modules)
           .map((module) => (!module.externalType ? false : module.request))
           .filter(Boolean);
 
         const dependencies = this.dependencies
           .map((dep) => ({
             ...dep,
-            external: this.externals.includes(dep.moduleName),
+            external: externals.includes(dep.moduleName),
           }))
           .reduce((acc, { specifier, moduleName, file, external }) => {
             const existingImportIndex = acc.findIndex(
@@ -82,11 +79,14 @@ module.exports = class MfeDepsWebpackPlugin {
         };
         if (this.meta) report.meta = this.meta;
 
-        this.writeReport(
-          // TODO: make this configurable
+        writeFileSync(
           resolve(compiler.outputPath, 'mfe-deps.json'),
-          report
-        ).then(callback);
+          JSON.stringify(report, null, 2)
+        );
+
+        if (this.visualize) createVisualization(report, {});
+
+        finished();
       }
     );
   }
