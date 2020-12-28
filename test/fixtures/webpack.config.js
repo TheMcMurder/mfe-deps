@@ -12,8 +12,9 @@ module.exports = {
     new MfeDepsWebpackPlugin({
       name: name,
       meta: {
-        repository: repository.url,
+        repo: repository.url,
       },
+      visualize: true,
     }),
   ],
   externals: ['react'],
