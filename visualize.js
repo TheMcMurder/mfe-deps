@@ -1,4 +1,4 @@
-const { mkdirSync, writeFileSync, readFileSync } = require('fs');
+const { mkdirSync, writeFileSync } = require('fs');
 const { resolve, dirname, basename } = require('path');
 const openLocally = require('open');
 const uniqWith = require('lodash.uniqwith');
