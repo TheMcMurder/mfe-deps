@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "files": [
-    "index.js"
+    "index.js",
+    "visualize.js",
+    "index.html"
   ],
   "scripts": {
     "test": "jest",
