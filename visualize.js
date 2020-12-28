@@ -278,6 +278,6 @@ module.exports = function visualize(report, options = {}) {
     </html>
   `;
 
-  writeFileSync(output, template.replace('%DATA%', data));
+  writeFileSync(output, template);
   if (open) openLocally(output);
 };
