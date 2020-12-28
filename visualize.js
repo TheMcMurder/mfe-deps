@@ -1,5 +1,6 @@
 const { mkdirSync, writeFileSync, readFileSync } = require('fs');
 const { join, resolve } = require('path');
+const open = require('open');
 const uniqWith = require('lodash.uniqwith');
 const isEqual = require('lodash.isequal');
 
@@ -38,8 +39,12 @@ module.exports = function visualize(report, options = {}) {
   } catch (e) {
     // stfu
   }
+
+  const outIndexHtml = resolve(outDir, 'index.html');
   writeFileSync(
-    resolve(outDir, 'index.html'),
+    outIndexHtml,
     indexHtml.replace('%DATA%', JSON.stringify({ nodes, links }, null, 2))
   );
+
+  if (options.open) open(outIndexHtml);
 };

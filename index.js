@@ -9,11 +9,12 @@ const createVisualization = require('./visualize');
  * By doing this in the bundler, you can get visibilty into both external and bundled dependencies.
  */
 module.exports = class MfeDepsWebpackPlugin {
-  constructor({ name, meta, visualize = false } = {}) {
+  constructor({ name, meta, visualize = false, open = false } = {}) {
     if (!name)
       throw new Error(`${MfeDepsWebpackPlugin.name} requires a 'name' option`);
     this.name = name;
     this.meta = meta;
+    this.open = open;
     this.visualize = visualize;
     this.dependencies = [];
   }
@@ -84,7 +85,7 @@ module.exports = class MfeDepsWebpackPlugin {
           JSON.stringify(report, null, 2)
         );
 
-        if (this.visualize) createVisualization(report, {});
+        if (this.visualize) createVisualization(report, { open: this.open });
 
         finished();
       }

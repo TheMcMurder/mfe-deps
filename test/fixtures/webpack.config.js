@@ -15,6 +15,7 @@ module.exports = {
         repo: repository.url,
       },
       visualize: true,
+      open: true,
     }),
   ],
   externals: ['react'],
