@@ -2,6 +2,9 @@ const webpack = require('webpack');
 const config = require('./fixtures/webpack.config.js');
 const { rmdirSync, existsSync, readFileSync } = require('fs');
 const { resolve } = require('path');
+const open = require('open');
+
+jest.mock('open');
 
 const FIXTURE = (f) => resolve(__dirname, 'fixtures', f);
 
@@ -40,6 +43,7 @@ test('Basic usage', (done) => {
     );
     // Metadata is included
     expect(report.meta).toBeTruthy();
+    expect(open).toHaveBeenCalled();
     done();
   });
 });
