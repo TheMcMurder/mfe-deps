@@ -26,27 +26,25 @@ module.exports = function visualize(report, options = {}) {
   output = resolve(output);
   if (!isFile(output)) throw new Error('output must be a path to a file.');
   mkdir(dirname(output));
-  const data = {
-    nodes: dedupe(
-      [
-        {
-          id: report.name,
-          group: 'application',
-        },
-      ].concat(
-        report.dependencies.map((dep) => ({
-          id: dep.moduleName,
-          group: dep.external ? 'shared-dependency' : 'dependency',
-        }))
-      )
-    ),
-    links: dedupe(
+  const nodes = dedupe(
+    [
+      {
+        id: report.name,
+        group: 'application',
+      },
+    ].concat(
       report.dependencies.map((dep) => ({
-        source: report.name,
-        target: dep.moduleName,
+        id: dep.moduleName,
+        group: dep.external ? 'shared-dependency' : 'dependency',
       }))
-    ),
-  };
+    )
+  );
+  const links = dedupe(
+    report.dependencies.map((dep) => ({
+      source: report.name,
+      target: dep.moduleName,
+    }))
+  );
 
   const template = html`
     <!DOCTYPE html>
@@ -159,7 +157,10 @@ module.exports = function visualize(report, options = {}) {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.2.0/d3.min.js"></script>
         <script>
           document.addEventListener('DOMContentLoaded', () => {
-            const data = ${toJSON(data)};
+            const data = ${toJSON({
+              nodes,
+              links,
+            })};
             const links = data.links.map(Object.create);
             const nodes = data.nodes.map(Object.create);
 
