@@ -11,16 +11,18 @@ afterAll(() => {
     // Clean up fixtures dist/ folder
     rmdirSync(fixtureDist, { recursive: true });
   } catch (err) {
-    console.error(`Error while deleting ${fixtureDist}.`);
+    console.error(`Error while deleting ${fixtureDist}.\n`, err);
   }
 });
 
 test('Basic usage', (done) => {
   const compiler = webpack(config);
-  compiler.run((err) => {
-    expect(err).toBeFalsy();
+  compiler.run((_err, stats) => {
+    expect(stats.hasErrors()).toBe(false);
     const reportPath = FIXTURE('dist/mfe-deps.json');
     expect(existsSync(reportPath)).toBe(true);
+    const reportContents = readFileSync(reportPath, { encoding: 'utf-8' });
+    expect(reportContents).toBeTruthy();
     const report = JSON.parse(readFileSync(reportPath));
     expect(report).toBeTruthy();
     // Expected dependencies to show up with correct external
