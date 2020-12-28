@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "stats": "webpack -c webpack.config.js"
+    "build": "webpack -c webpack.config.js"
   },
   "author": "@filoxo",
   "license": "MIT",
@@ -18,5 +18,10 @@
   "repository": {
     "type": "git",
     "url": "https://gitpoop.com/poopyproject.git"
-  }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 10"
+  ]
 }
