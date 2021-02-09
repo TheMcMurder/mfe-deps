@@ -1,18 +1,27 @@
 {
   "name": "mfe-deps-server",
   "version": "0.0.1",
-  "description": "",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
-    "start": "fastify start server.js",
-    "test": "echo \"Error: tests not yet enabled. https://www.fastify.io/docs/latest/Testing/\" && exit 1"
+    "start": "fastify start -l info app.js",
+    "test": "tap test/**/*.test.js",
+    "dev": "fastify start -w -l info -P app.js"
   },
   "author": "@filoxo",
   "license": "MIT",
   "dependencies": {
-    "fastify": "^3.11.0",
+    "fastify": "^3.0.0",
     "fastify-cli": "^2.7.0",
     "fastify-mongodb": "^2.0.1",
-    "fastify-plugin": "^3.0.0"
-  }
+    "fastify-plugin": "^3.0.0",
+    "fastify-autoload": "^3.3.1"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "tap": "^14.11.0"
+  },
+  "keywords": [],
+  "description": ""
 }

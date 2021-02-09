@@ -1,4 +1,6 @@
-async function routes(fastify, options) {
+"use strict";
+
+module.exports = async function (fastify, opts) {
   const collection = fastify.mongo.db.collection("reports");
 
   fastify.get("/", async (request, reply) => {
@@ -20,6 +22,4 @@ async function routes(fastify, options) {
       return {};
     }
   );
-}
-
-module.exports = routes;
+};
