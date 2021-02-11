@@ -15,7 +15,7 @@ module.exports = async function (fastify, opts) {
     "/report",
     {
       schema: {
-        body: { $ref: "mfe-deps-report-schema" },
+        body: { $ref: "mfe-deps-report-schema#" },
       },
     },
     async (request, reply) => {
