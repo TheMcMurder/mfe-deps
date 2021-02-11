@@ -6,7 +6,7 @@ const fp = require("fastify-plugin");
 // to export the decorators to the outer scope
 module.exports = fp(async function dbConnector(fastify, opts) {
   fastify.register(require("fastify-mongodb"), {
-    url: "mongodb://localhost:27017/mfe-deps",
+    url: process.env.MONGODB_URL || "mongodb://localhost/mfedepsserver",
   });
 
   fastify.addSchema({
