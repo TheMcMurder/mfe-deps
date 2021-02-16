@@ -24,3 +24,8 @@ services:
     environment:
       MONGODB_USER: mfe-deps-user
       MONGODB_PASSWORD: mfe-deps-password
+    healthcheck:
+      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo -u $${MONGODB_USER} -p $${MONGODB_PASSWORD} --quiet) -eq 1
+      interval: 10s
+      start_period: 30s
+    command: ["--replSet", "rs0", "--bind_ip_all"]
