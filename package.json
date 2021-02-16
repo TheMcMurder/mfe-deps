@@ -10,6 +10,7 @@
   "author": "@filoxo",
   "license": "MIT",
   "dependencies": {
+    "event-iterator": "^2.0.0",
     "fastify": "^3.0.0",
     "fastify-autoload": "^3.3.1",
     "fastify-cli": "^2.7.0",
