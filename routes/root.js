@@ -3,9 +3,11 @@ const fs = require("fs").promises;
 const uniqWith = require("lodash.uniqwith");
 const isEqual = require("lodash.isequal");
 const dedupe = (arr) => uniqWith(arr, isEqual);
-
+const { EventIterator } = require("event-iterator");
 module.exports = async function (fastify, opts) {
   const collection = fastify.mongo.db.collection("reports");
+  const changeStream = collection.watch();
+
   const indexHtml = await fs.readFile(__dirname + "/index.html");
 
   fastify.get("/", async (request, reply) => {
@@ -14,13 +16,11 @@ module.exports = async function (fastify, opts) {
 
   fastify.get("/data", async (request, reply) => {
     const chartData = visualize(MOCK_REPORT);
-    return reply.sse(
-      (async function* source() {
-        yield {
-          data: JSON.stringify(chartData),
-          event: "ping",
-        };
-      })()
+    reply.sse(
+      new EventIterator((push) => {
+        changeStream.on("change", (d) => push(d));
+        return () => changeStream.close();
+      })
     );
   });
 
