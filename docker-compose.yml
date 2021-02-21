@@ -5,27 +5,8 @@ services:
     restart: always
     build: .
     image: "filoxo/mfe-deps-server:latest"
-    environment:
-      - MONGODB_URL=mongodb://mongodb/mfedepsserver
     command: npm run dev
     ports:
       - 3000:3000
     expose:
       - 3000
-    depends_on:
-      - mongodb
-  mongodb:
-    image: "mongo:latest"
-    container_name: mfe-deps-server-mongodb
-    ports:
-      - 27017:27017
-    expose:
-      - 27017
-    environment:
-      MONGODB_USER: mfe-deps-user
-      MONGODB_PASSWORD: mfe-deps-password
-    healthcheck:
-      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo -u $${MONGODB_USER} -p $${MONGODB_PASSWORD} --quiet) -eq 1
-      interval: 10s
-      start_period: 30s
-    command: ["--replSet", "rs0", "--bind_ip_all"]

@@ -12,9 +12,7 @@
   "dependencies": {
     "event-iterator": "^2.0.0",
     "fastify": "^3.0.0",
-    "fastify-autoload": "^3.3.1",
     "fastify-cli": "^2.7.0",
-    "fastify-mongodb": "^2.0.1",
     "fastify-plugin": "^3.0.0",
     "fastify-sse-v2": "^2.0.3",
     "lodash.isequal": "^4.5.0",
