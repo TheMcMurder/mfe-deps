@@ -20,5 +20,4 @@ This JSON can be generated using mfe-deps-analyzer plugin for Webpack.
 
 - Clone repo
 - Install dependencies `yarn install`
-- Start local database `docker-compose up -d mongodb`
 - Run local server `yarn dev`
