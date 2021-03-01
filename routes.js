@@ -7,6 +7,7 @@ const dedupe = (arr) => uniqWith(arr, isEqual);
 const { EventIterator } = require("event-iterator");
 
 module.exports = async function (fastify, opts) {
+  const collection = fastify.mongo.db.collection("reports");
   const indexHtml = await fs.readFile(__dirname + "/index.html");
 
   fastify.get("/", async (request, reply) => {
@@ -22,15 +23,23 @@ module.exports = async function (fastify, opts) {
     );
   });
 
-  fastify.post("/report", async (request, reply) => {
-    try {
-      const data = visualize(request.body.data);
-      // collection.insert(data);
-      reply.status(200);
-    } catch (e) {
-      return reply.status(500);
+  fastify.post(
+    "/report",
+    {
+      schema: {
+        body: { $ref: "mfe-deps-report-schema#" },
+      },
+    },
+    async (request, reply) => {
+      try {
+        const data = visualize(request.body.data);
+        collection.insert(data);
+        reply.status(200);
+      } catch (e) {
+        return reply.status(500);
+      }
     }
-  });
+  );
 };
 
 const MOCK_REPORT = {
