@@ -132,10 +132,9 @@
           const chart = renderChart();
           const status = document.getElementById('status');
           const setStatusContent = (msg) => status.innerHTML = msg
-
-          evtSource.addEventListener("ping", function (event) {
-            const data = JSON.parse(event.data);
-            chart.update(data);
+          evtSource.addEventListener('message', function ({data}) {
+            const a = JSON.parse(data)
+            chart.update(a);
             setStatusContent("")
           });
 
