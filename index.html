@@ -249,6 +249,8 @@
                 const nodeGroup = enter
                   .append("g")
                   .attr("class", "node")
+                  // .attr("data-id", n => n.id)
+                  // .attr("data-group", n => n.group)
                   .call(drag(simulation));
                 // circles with color
                 nodeGroup.insert("circle")
@@ -265,7 +267,9 @@
             link = link
               .data(links, (d) => [d.source, d.target])
               .join("line")
-              .attr("stroke-width", 1.5);
+              .attr("stroke-width", 1.5)
+              // .attr("data-source", l => l.source)
+              // .attr("data-target", l => l.target)
 
             simulation.nodes(nodes);
             simulation.force("link").links(links);
