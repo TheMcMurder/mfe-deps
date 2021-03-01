@@ -61,7 +61,6 @@ module.exports = async function (fastify, opts) {
       (async function* () {
         opsEvents.emit(REPORTED);
         for await (const data of on(opsEvents, UPDATED)) {
-          console.log("data", data);
           yield {
             data,
           };
