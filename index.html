@@ -152,7 +152,7 @@
           .forceSimulation()
           .force(
             "link",
-            d3.forceLink().id((d) => d.id)
+            d3.forceLink().id((d) => d.id).distance(100)
           )
           .force("charge", d3.forceManyBody())
           .force("x", d3.forceX())
