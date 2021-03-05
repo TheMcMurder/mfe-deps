@@ -41,7 +41,7 @@ module.exports = async function (fastify, opts) {
     ]);
 
     return {
-      nodes,
+      nodes: dedupe(nodes), // I can't fucking figure out how to dedupe within the Mongo query
       links,
     };
   };
