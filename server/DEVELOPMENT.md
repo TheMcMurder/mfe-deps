@@ -6,8 +6,6 @@
 
 # Setup 
 
-1. Clone repo `git clone git@github.com:filoxo/mfe-deps-server.git && cd mfe-deps-server`
-1. Install dependencies `yarn`
 1. Setup the database `docker compose up -d mongodb`
   - TODO: create seed data for local dev
 1. Start server app locally `yarn dev`
