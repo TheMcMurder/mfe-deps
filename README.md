@@ -6,9 +6,9 @@
 
 The root URL serves the page to display the visualization of dependencies across all microfrontends reported.
 
-### POST `/api/report`
+### POST `/report`
 
-A POST request to `/api/report` requires a JSON body with the following shape:
+A POST request to `/report` requires a JSON body with the following shape:
 
 ```ts
 // TODO: copy db schema once I figure it out
