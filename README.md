@@ -18,6 +18,4 @@ This JSON can be generated using mfe-deps-analyzer plugin for Webpack.
 
 ## Local development
 
-- Clone repo
-- Install dependencies `yarn install`
-- Run local server `yarn dev`
+See [Development documentation](./DEVELOPMENT.md).
