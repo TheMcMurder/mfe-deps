@@ -14,7 +14,7 @@ const UPDATED = "updated";
 module.exports = async function (fastify, opts) {
   const reports = fastify.mongo.db.collection("reports");
   const graphs = fastify.mongo.db.collection("graphs");
-  const indexHtml = await fs.readFile(__dirname + "/index-v2.html");
+  const indexHtml = await fs.readFile(__dirname + "/index-v3.html");
 
   const queryForGraphData = async () => {
     const [nodes, links] = await Promise.all([
