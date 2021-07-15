@@ -1,0 +1,29 @@
+{
+  "name": "mfe-deps-webpack-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "visualize.js"
+  ],
+  "scripts": {
+    "test": "jest",
+    "stats": "webpack --json stats.json"
+  },
+  "author": "@filoxo",
+  "license": "MIT",
+  "dependencies": {
+    "lodash.isequal": "^4.5.0",
+    "lodash.uniqwith": "^4.5.0",
+    "open": "^7.3.0",
+    "webpack": "^5.5.0"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "webpack-cli": "^4.2.0"
+  },
+  "resolutions": {
+    "browserslist": "4.15.0"
+  }
+}
