@@ -1,0 +1,30 @@
+{
+  "name": "mfe-deps-server",
+  "version": "0.0.1",
+  "main": "app.js",
+  "scripts": {
+    "start": "fastify start -l info app.js",
+    "test": "tap test/**/*.test.js",
+    "dev": "fastify start -w -l info -P app.js"
+  },
+  "author": "@filoxo",
+  "license": "MIT",
+  "dependencies": {
+    "event-iterator": "^2.0.0",
+    "fastify": "^3.19.1",
+    "fastify-cli": "^2.13.0",
+    "fastify-mongodb": "^2.0.1",
+    "fastify-plugin": "^3.0.0",
+    "fastify-sse-v2": "^2.0.6",
+    "lodash.isequal": "^4.5.0",
+    "lodash.uniqwith": "^4.5.0"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "tap": "^15.0.9"
+  },
+  "keywords": [],
+  "description": ""
+}
