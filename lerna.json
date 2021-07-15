@@ -1,6 +1,7 @@
 {
   "packages": [
-    "packages/*"
+    "packages/*",
+    "packages/plugin-webpack/test/*"
   ],
   "npmClient": "yarn",
   "version": "independent"

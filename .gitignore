@@ -59,4 +59,7 @@ profile*
 
 # From plugin/webpack merge
 test/**/dist/
-.DS_Store
+
+# TODO update this
+packages/plugin-webpack/mfe-deps.html
+
