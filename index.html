@@ -114,47 +114,49 @@
       #zoom-out {
         background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJAQMAAADaX5RTAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkU5MjRDMEQ5NjQzNzExRTBCM0JDQkU2MzVGQTBCNjRDIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkU5MjRDMERBNjQzNzExRTBCM0JDQkU2MzVGQTBCNjRDIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6RTkyNEMwRDc2NDM3MTFFMEIzQkNCRTYzNUZBMEI2NEMiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6RTkyNEMwRDg2NDM3MTFFMEIzQkNCRTYzNUZBMEI2NEMiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7uh53jAAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP/AOW3MEoAAAARSURBVAhbY/jfwABBcAATAQB6xwj7vHGbwAAAAABJRU5ErkJggg==);
       }
+      
+      .node, line {
+        transition: opacity 0.2s ease-in-out;
+      }
+      
+      .hover {
+        opacity: 0.2;
+      }
+      
+      [v-cloak] {
+        display: none;
+      }
     </style>
   </head>
   <body>
-    <div id="status" role="status" aria-live="polite"></div> 
-    <div class="zoom">
-      <button id="zoom-in" aria-label="Zoom in"></button>
-      <button id="zoom-out" aria-label="Zoom out"></button>
-    </div>
+    <main v-scope @mounted="setup()">
+      <div id="status" role="status" aria-live="polite" v-cloak>
+        <p v-show="eventSourceError">The data stream has encountered an error. <a href="/">Reload the page</a> if issues persist.</p>
+      </div>
+      <div class="zoom">
+        <button id="zoom-in" aria-label="Zoom in" @click="zoomIn"></button>
+        <button id="zoom-out" aria-label="Zoom out" @click="zoomOut"></button>
+      </div>
+      <svg id="chart"></svg>
+    </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.2.0/d3.min.js"></script>
-    <script>
-      window.initialized = false;
-      document.addEventListener(
-        "DOMContentLoaded",
-        () => {
-          const evtSource = new EventSource("/data", { withCredentials: false });
-          const chart = renderChart();
-          const status = document.getElementById('status');
-          const setStatusContent = (msg) => status.innerHTML = msg
-          evtSource.addEventListener('message', function ({data}) {
-            const a = JSON.parse(data)
-            chart.update(a);
-            setStatusContent("")
-          });
-
-          evtSource.addEventListener('error', function (err){
-            console.error("EventSource failed:", err);
-            setStatusContent(`<p>The data stream has encountered an error. <a href="/">Reload the page</a> if issues persist.</p>`)
-          })
-        },
-        { once: true }
-      );
-
+    <script type="module">
+      import { createApp } from 'https://cdn.skypack.dev/petite-vue@0.2.2?min'
+      
       const renderChart = () => {
         // distributed force graph
         const simulation = d3
           .forceSimulation()
           .force(
             "link",
-            d3.forceLink().id((d) => d.id).distance(100)
+            d3
+              .forceLink()
+              .id((d) => d.id)
+              .distance(100)
           )
-          .force("charge", d3.forceManyBody())
+          .force("charge", d3.forceManyBody().strength(-500))
+          .force("collide", d3.forceCollide())
+          .force("center", d3.forceCenter())
           .force("x", d3.forceX())
           .force("y", d3.forceY());
 
@@ -170,7 +172,7 @@
         const height = window.innerWidth;
         const width = window.innerHeight;
         const svg = d3
-          .create("svg")
+          .select("#chart")
           .attr("viewBox", [-width / 2, -height / 2, width, height])
           .call(zoom);
 
@@ -223,60 +225,114 @@
           node.attr("transform", (d) => `translate(${d.x},${d.y})`);
         });
 
-        document.body.prepend(svg.node());
+        // document.body.append(svg.node());
 
-        // zoom in button
-        document.getElementById("zoom-in").addEventListener("click", (e) => {
-          svg.transition().call(zoom.scaleBy, 2);
-        });
-
-        // zoom out button
-        document.getElementById("zoom-out").addEventListener("click", (e) => {
-          svg.transition().call(zoom.scaleBy, 0.5);
-        });
-
-        return Object.assign(svg.node(), {
+        return {
           // This update function allows for merging in the newest data
-          // while not forcing the whole visualization to re-render 
+          // while not forcing the whole visualization to re-render
           update({ links, nodes }) {
             const old = new Map(node.data().map((d) => [d.id, d]));
             nodes = nodes.map((d) => Object.assign(old.get(d.id) || {}, d));
             links = links.map((d) => Object.assign({}, d));
 
-            node = node
-              .data(nodes)
-              .join((enter) => {
-                const nodeGroup = enter
-                  .append("g")
-                  .attr("class", "node")
-                  // .attr("data-id", n => n.id)
-                  // .attr("data-group", n => n.group)
-                  .call(drag(simulation));
-                // circles with color
-                nodeGroup.insert("circle")
-                  .attr("r", 5)
-                  .attr("fill", color);
-                // Text labels
-                nodeGroup.insert("text")
-                  .attr("dx", 8)
-                  .attr("dy", ".35em")
-                  .text(({name, id}) => name || id);
-                return nodeGroup;
-              });
+            const hoverLookupCache = {};
+
+            node = node.data(nodes).join((enter) => {
+              const nodeGroup = enter
+                .append("g")
+                .attr("class", "node")
+                .on("mouseover", (evt, n) => {
+                  if (!hoverLookupCache[n.id]) {
+                    const connectedLinks = [n].concat(
+                      links.filter((l) => l.source === n || l.target === n)
+                    );
+
+                    const connectedNodes = [n.id].concat(
+                      links
+                        .map((l) => {
+                          if (l.source === n) return l.target.id;
+                          if (l.target === n) return l.source.id;
+                          return false;
+                        })
+                        .filter(Boolean)
+                    );
+
+                    const nodesToHighlight = d3
+                      .selectAll(".node")
+                      .filter((x) => !connectedNodes.includes(x.id));
+
+                    const linesToHighlight = d3
+                      .selectAll("line")
+                      .filter((x) => !connectedLinks.includes(x));
+
+                    hoverLookupCache[n.id] = {
+                      nodesToHighlight,
+                      linesToHighlight,
+                    }
+                  }
+
+                  hoverLookupCache[n.id].nodesToHighlight.classed("hover", true);
+                  hoverLookupCache[n.id].linesToHighlight.classed("hover", true);
+                })
+                .on("mouseout", (evt, n) => {
+                  d3.selectAll(".node.hover").classed("hover", false);
+                  d3.selectAll("line").classed("hover", false);
+                })
+                // .attr("data-id", n => n.id)
+                // .attr("data-group", n => n.group)
+                .call(drag(simulation));
+
+              // circles with color
+              nodeGroup.insert("circle").attr("r", 25).attr("fill", color);
+              
+              // Text labels
+              nodeGroup
+                .insert("text")
+                .attr("text-anchor", "middle")
+                .attr("alignment-baseline", "central")
+                // .attr("dx", 8)
+                // .attr("dy", ".35em")
+                .text(({ name, id }) => name || id);
+              return nodeGroup;
+            });
 
             link = link
               .data(links, (d) => [d.source, d.target])
               .join("line")
-              .attr("stroke-width", 1.5)
-              // .attr("data-source", l => l.source)
-              // .attr("data-target", l => l.target)
+              .attr("stroke-width", 1.5);
+            // .attr("data-source", l => l.source)
+            // .attr("data-target", l => l.target)
 
             simulation.nodes(nodes);
             simulation.force("link").links(links);
             simulation.alpha(1).restart();
           },
-        });
+          zoomIn() {
+            svg.transition().call(zoom.scaleBy, 2);
+          },
+          zoomOut() {
+            svg.transition().call(zoom.scaleBy, 0.5);
+          }
+        };
       };
+
+      createApp({
+        eventSourceError: false,
+        setup() {
+          const { update, zoomIn, zoomOut } = renderChart()    
+          this.zoomIn = zoomIn
+          this.zoomOut = zoomOut
+          const evtSource = new EventSource("/data", { withCredentials: false });
+          evtSource.addEventListener("message", ({ data }) => {
+            update(JSON.parse(data))
+            this.eventSourceError = false
+          });
+          evtSource.addEventListener("error", (err) => {
+            console.error("EventSource failed:", err);
+            this.eventSourceError = true
+          });
+        },
+      }).mount()
     </script>
   </body>
 </html>
