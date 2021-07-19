@@ -100,6 +100,19 @@ module.exports = async function (fastify, opts) {
       }
     }
   );
+
+  fastify.delete('/report', async (request, reply) => {
+    try {
+      const { name } = request.body;
+      await reports.deleteOne({ _id: name });
+      await graphs.deleteOne({ _id: name });
+      opsEvents.emit(REPORTED);
+      reply.status(200).send();
+    } catch (e) {
+      console.error("/report error:", e);
+      reply.status(500).send(e);
+    }
+  })
 };
 
 const getScope = (isExternal, name) => (isExternal ? "shared" : name);
