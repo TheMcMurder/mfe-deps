@@ -26,5 +26,10 @@
     "tap": "^15.0.9"
   },
   "keywords": [],
-  "description": ""
+  "description": "",
+  "prettier": {
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true
+  }
 }
