@@ -17,28 +17,38 @@ module.exports = async function (fastify, opts) {
   const indexHtml = await fs.readFile(__dirname + "/index.html");
 
   const queryForGraphData = async () => {
-    const [nodes, links] = await Promise.all([
-      graphs
-        .aggregate([
-          { $project: { nodes: 1, _id: 0 } },
-          { $unwind: "$nodes" },
-          {
-            $project: {
-              id: "$nodes.id",
-              name: "$nodes.name",
-              group: "$nodes.group",
+    const query = graphs.aggregate([
+      {
+        $facet: {
+          nodes: [
+            { $unwind: '$nodes' },
+            {
+              $project: {
+                _id: 0,
+                id: '$nodes.id',
+                name: '$nodes.name',
+                group: '$nodes.group',
+              },
             },
-          },
-        ])
-        .toArray(),
-      graphs
-        .aggregate([
-          { $project: { links: 1, _id: 0 } },
-          { $unwind: "$links" },
-          { $project: { source: "$links.source", target: "$links.target" } },
-        ])
-        .toArray(),
-    ]);
+          ],
+          links: [
+            { $unwind: '$links' },
+            {
+              $project: {
+                _id: 0,
+                source: '$links.source',
+                target: '$links.target',
+              },
+            },
+          ],
+        },
+      },
+    ])
+
+    const { nodes, links } = await query.next()
+
+    if (await query.hasNext())
+      console.warn('there were more graph results that are not included!')
 
     return {
       nodes: dedupe(nodes), // I can't fucking figure out how to dedupe within the Mongo query
