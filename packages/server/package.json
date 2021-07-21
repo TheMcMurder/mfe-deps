@@ -2,6 +2,9 @@
   "name": "mfe-deps-server",
   "version": "0.0.1",
   "main": "app.js",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
     "start": "fastify start -l info app.js",
     "test": "tap test/**/*.test.js",
