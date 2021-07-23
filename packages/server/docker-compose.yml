@@ -1,13 +1,18 @@
-version: "3.7"
+version: '3.7'
+
+x-app-credentials: &app-credentials
+  APP_DB_USER: mfe-deps-user
+  APP_DB_PW: mfe-deps-password
+  MONGO_INITDB_DATABASE: dependencies
+
 services:
   app:
     container_name: mfe-deps-server
     restart: always
     build: .
-    image: "filoxo/mfe-deps-server:latest"
-    environment:
-      - MONGODB_URL=mongodb://mongodb/dependencies
-    command: npm run dev
+    init: true
+    image: 'filoxo/mfe-deps-server:latest'
+    environment: *app-credentials
     ports:
       - 3000:3000
     expose:
@@ -15,7 +20,7 @@ services:
     depends_on:
       - mongodb
   mongodb:
-    image: "mongo:latest"
+    image: 'mongo:latest'
     container_name: mfe-deps-server-mongodb
     ports:
       - 27017:27017
@@ -24,11 +29,11 @@ services:
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     environment:
+      <<: *app-credentials
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password123
-      MONGO_INITDB_DATABASE: dependencies
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet
+      test: echo 'db.runCommand("ping").ok' | mongo mongodb:27017/test --quiet
       interval: 10s
       timeout: 10s
       retries: 5
