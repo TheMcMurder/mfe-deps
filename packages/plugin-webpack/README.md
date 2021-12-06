@@ -42,3 +42,7 @@ module.exports = {
   externals: ['react'],
 };
 ```
+
+## Development
+
+Development workflow can be entirely local with the `./test` folder or using `yalc` to install package in other project
