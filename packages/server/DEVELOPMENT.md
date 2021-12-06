@@ -1,8 +1,8 @@
 # Requirements
 
 - Install docker
-- Install Insomnia 
-- Install Mongo Compass
+- Install [Insomnia](https://insomnia.rest/download) 
+- Install [Mongo Compass](https://www.mongodb.com/try/download/compass)
 
 # Setup 
 
