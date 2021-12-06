@@ -14,6 +14,10 @@
         overflow: hidden;
       }
 
+      main {
+        height: 100vh;
+      }
+
       #status {
         background-color: FireBrick;
         color: white;
@@ -177,7 +181,8 @@
           .call(zoom);
 
         // elements container
-        const g = svg.append("g");
+        const g = svg.append("g")
+          .attr('id', 'elements-container')
 
         // // lines between circles
         let link = g
@@ -194,11 +199,13 @@
           d3
             .drag()
             .on("start", function dragstarted({ active, x, y }, d) {
+              console.log('drag starr')
               if (!active) simulation.alphaTarget(0.3).restart();
               d.fx = x;
               d.fy = y;
             })
             .on("drag", function dragged({ x, y }, d) {
+              console.log('draggg')
               d.fx = x;
               d.fy = y;
             })
@@ -312,14 +319,14 @@
           },
           zoomOut() {
             svg.transition().call(zoom.scaleBy, 0.5);
-          }
+          },
         };
       };
 
       createApp({
         eventSourceError: false,
         setup() {
-          const { update, zoomIn, zoomOut } = renderChart()    
+          const { update, zoomIn, zoomOut} = renderChart()    
           this.zoomIn = zoomIn
           this.zoomOut = zoomOut
           const evtSource = new EventSource("/data", { withCredentials: false });
