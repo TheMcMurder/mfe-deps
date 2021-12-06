@@ -10,6 +10,11 @@
   - TODO: create seed data for local dev
 1. Start server app locally `yarn dev`
 
+## View DB
+
+1. Open Mongo compass
+1. Enter connection: mongodb://user:password@localhost:27017/?authSource=dependencies
+
 ## Example POST
 
 ```sh
