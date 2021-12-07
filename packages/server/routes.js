@@ -92,13 +92,13 @@ module.exports = async function (fastify, opts) {
         const graph = derriveGraph(source)
         await Promise.all([
           reports.updateOne(
-            source,
-            { $set: { _id: source.name } },
-            { upsert: true }
+            { _id: source.name},
+            { $set: source },
+            { upsert: true}
           ),
           graphs.updateOne(
-            graph,
-            { $set: { _id: source.name } },
+            { _id: source.name},
+            { $set: graph },
             { upsert: true }
           ),
         ])
