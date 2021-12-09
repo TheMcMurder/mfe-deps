@@ -4,7 +4,7 @@ services:
     container_name: mfe-deps-server
     restart: always
     build: .
-    image: "filoxo/mfe-deps-server:latest"
+    image: "themcmurder/mfe-deps-server:latest"
     environment:
       - MONGODB_URL=mongodb://mongodb/dependencies
     command: npm run dev
